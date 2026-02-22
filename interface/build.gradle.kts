@@ -1,13 +1,13 @@
 plugins {
-    id("com.android.library")
-    id("maven-publish")
-    id("signing")
+    alias(libs.plugins.agp.lib)
+    `maven-publish`
+    signing
 }
 
 android {
     namespace = "io.github.libxposed.service"
-    compileSdk = 34
-    buildToolsVersion = "34.0.0"
+    compileSdk = 36
+    buildToolsVersion = "36.1.0"
 
     defaultConfig {
         minSdk = 24
