@@ -8,8 +8,8 @@ plugins {
 
 android {
     namespace = "io.github.libxposed.service.interfaces"
-    compileSdk = 36
-    buildToolsVersion = "36.1.0"
+    compileSdk = 37
+    buildToolsVersion = "37.0.0"
     androidResources.enable = false
     enableKotlin = false
 
@@ -34,6 +34,10 @@ android {
     }
 }
 
+val libVersion = "102.0.0"
+val publishSnapshot = providers.gradleProperty("publishSnapshot").orNull == "true"
+fun String.real(snapshot: Boolean) = if (snapshot) "$this-SNAPSHOT" else this
+
 val dokkaJavadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
     dependsOn("dokkaGeneratePublicationJavadoc")
@@ -45,7 +49,7 @@ publishing {
         register<MavenPublication>("interface") {
             artifactId = "interface"
             group = "io.github.libxposed"
-            version = "101.0.0"
+            version = libVersion.real(publishSnapshot)
             artifact(dokkaJavadocJar)
             pom {
                 name.set("interface")
@@ -77,6 +81,11 @@ publishing {
         maven {
             name = "ossrh"
             url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+            credentials(PasswordCredentials::class)
+        }
+        maven {
+            name = "snapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
             credentials(PasswordCredentials::class)
         }
         maven {
